@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Mascota;
-
+use App\Http\Requests\MascotaRequest; // Importamos nuestro  MascotaRequest
+use Illuminate\Support\Facades\Log;
 
 class MascotasController extends Controller
 {
@@ -34,20 +35,32 @@ class MascotasController extends Controller
      */
     public function store(Request $request)
     {
-        //Almacenar mascota recien creada
-        $mascota = new Mascota();
-        $mascota->nombre = $request->input('nombre');
-        $mascota->especie = $request->input('especie');
-        $mascota->raza = $request->input('raza');
-        $mascota->edad = $request->input('edad');
-        $mascota->peso = $request->input('peso');
-        // Verificar si el campo "vacunado" se envió en el formulario
-    // Si no se envió, establecerlo como falso (no vacunado)
-        $mascota->vacunada = $request->input('vacunado', false);
-        $mascota->fecha_nacimiento = $request->input('fecha_nacimiento');
 
-        $mascota->save();
+        // Validar los datos directamente en el controlador
+        $request->validate([
+            'nombre' => 'required|string|max:100',
+            'especie' => 'required|string|max:10',
+            'raza' => 'required|string|max:20',
+            'edad' => 'required|integer|min:1|max:20',
+            'peso' => 'required|numeric|min:0.01|max:100.0',
+            'vacunada' => 'required|boolean',
+            'pronostico' => 'required',
+        ]);
 
+    
+        // Convierte el valor 'true' en un booleano
+        $vacunada = $request->input('vacunada') == 'true';
+    
+        // Actualiza el valor de 'vacunada' en la solicitud
+        $request->merge(['vacunada' => $vacunada]);
+    
+        try {
+            // Almacenar la mascota recién creada
+            Mascota::create($request->all());
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->withErrors(['error' => 'Hubo un error al guardar la mascota.']);
+        }
+    
         return redirect()->route('mascotas.index');
     }
 
@@ -78,23 +91,34 @@ class MascotasController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //Actualizaicon de mascota
-        $mascota = Mascota::findOrFail($id);
-        $mascota->nombre = $request->input('nombre');
-        $mascota->especie = $request->input('especie');
-        $mascota->raza = $request->input('raza');
-        $mascota->edad = $request->input('edad');
-        $mascota->peso = $request->input('peso');
-        // Si no se envió, establecerlo como falso (no vacunado)
-        $mascota->vacunada = $request->has('vacunado') ? true : false;
 
-        $mascota->fecha_nacimiento = $request->input('fecha_nacimiento');
+        // Validar los datos directamente en el controlador
+        $request->validate([
+            'nombre' => 'required|string|max:100',
+            'especie' => 'required|string|max:10',
+            'raza' => 'required|string|max:20',
+            'edad' => 'required|integer|min:1|max:20',
+            'peso' => 'required|numeric|min:0.01|max:100.0',
+            'vacunada' => 'required|boolean',
+            'pronostico' => 'required',
+        ]);
 
+    // Actualización de mascota
+    $mascota = Mascota::findOrFail($id);
+    
+    // Convierte el valor 'true' en un booleano
+    $vacunada = $request->input('vacunada') == 'true';
+    
+    // Actualiza el valor de 'vacunada' en la solicitud
+    $request->merge(['vacunada' => $vacunada]);
 
-        $mascota->save();
+    try {
+        $mascota->update($request->all());
+    } catch (\Exception $e) {
+        return redirect()->back()->withInput()->withErrors(['error' => 'Hubo un error al actualizar la mascota.']);
+    }
 
-
-        return redirect()->route('mascotas.index');
+    return redirect()->route('mascotas.index');
     }
 
     /**

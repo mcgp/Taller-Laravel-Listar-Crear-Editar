@@ -19,7 +19,8 @@
                 <th>Edad</th>
                 <th>Peso</th>
                 <th>Vacunada</th>
-                <th>Fecha de Nacimiento</th>
+                <th>Pronostico</th>
+
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -32,7 +33,8 @@
                     <td>{{ $mascota->edad }}</td>
                     <td>{{ $mascota->peso }}</td>
                     <td>{{ $mascota->vacunada ? 'Sí' : 'No' }}</td>
-                    <td>{{ $mascota->fecha_nacimiento }}</td>
+                    <td>{{ $mascota->pronostico }}</td>
+
                     <td>
                         <a href="{{ route('mascotas.show', $mascota->id) }}" class="btn btn-primary">Ver</a>
                         <a href="{{ route('mascotas.edit', $mascota->id) }}" class="btn btn-warning">Editar</a>

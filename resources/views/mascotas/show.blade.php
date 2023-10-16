@@ -8,8 +8,9 @@
     <p><strong>Raza:</strong> {{ $mascota->raza }}</p>
     <p><strong>Edad:</strong> {{ $mascota->edad }}</p>
     <p><strong>Peso:</strong> {{ $mascota->peso }}</p>
-    <p><strong>Fecha de Nacimiento:</strong> {{ $mascota->fecha_nacimiento }}</p>
-    <p><strong>Vacunado:</strong> {{ $mascota->vacunada ? 'Sí' : 'No' }}</p>
+    <p><strong>Vacunada:</strong> {{ $mascota->vacunada ? 'Sí' : 'No' }}</p>
+    <p><strong>Pronóstico:</strong> {{ $mascota->pronostico }}</p>
+
     
     <a href="{{ route('mascotas.edit', $mascota->id) }}" class="btn btn-warning">Editar</a>
     <form action="{{ route('mascotas.destroy', $mascota->id) }}" method="POST" style="display: inline;">

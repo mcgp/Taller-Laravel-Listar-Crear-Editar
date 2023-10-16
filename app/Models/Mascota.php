@@ -17,6 +17,23 @@ class Mascota extends Model
         'edad',
         'peso',
         'vacunada',
-        'fecha_nacimiento',
+        'pronostico',
+       
     ];
+
+    protected static $enum = [
+        'pronostico' => ['Bueno', 'En observacion', 'Reservado'],
+    ];
+    
+    // Devuelve todas las opciones disponibles
+    public static function getPronosticoOptions()
+    {
+        return collect(self::$enum['pronostico']);
+    }
+    
+    // Obtener la opción seleccionada
+    public static function getPronostico($value)
+    {
+        return self::getPronosticoOptions()->get($value);
+    }
 }

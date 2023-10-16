@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('edad');
             $table->float('peso');
             $table->boolean('vacunada');
-            $table->date('fecha_nacimiento');
+            $table->enum('pronostico', ['Bueno', 'En observacion', 'Reservado']);
             $table->timestamps();
         });
     }
